@@ -4,6 +4,15 @@ const knex = require("knex")(knexConfig);
 class BugService {
   constructor(knex) {
     this.knex = knex;
+    this.initialize();
+  }
+  initialize() {
+    return this.knex.migrate.latest().then(() => {
+      return this.knex.seed.run();
+    });
+  }
+  cleanup() {
+    this.knex.destroy();
   }
   getAllBugs() {
     console.log(
@@ -41,4 +50,3 @@ class BugService {
 }
 
 let bugService = new BugService(knex);
-

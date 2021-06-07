@@ -8,18 +8,24 @@ const jwt = require("jsonwebtoken");
 class UserService {
   constructor(knex) {
     this.knex = knex;
+    this.initialize();
+  }
+  initialize() {
+    return this.knex.migrate.latest();
+  }
+  cleanup() {
+    this.knex.destroy();
   }
   signup(username, password) {
     console.log(
       "Hit user service signup. Should be able to sign up user."
     );
-    knex("users")
+    return this.knex("users")
       .select("*")
       .where({ username: username })
       .then((user) => {
-        console.log("User", user);
-        if (user.length > 0) {
-          console.log("User already exists");
+        // console.log("User", user);
+        if (user.length === 1) {
           return "User already exists";
           //   throw new Error("User already exists");
         } else {
@@ -34,24 +40,22 @@ class UserService {
                 .into("users")
                 .returning("id")
                 .then((id) => {
-                  console.log(
-                    "Able to post - here is the id:",
-                    id
-                  );
                   let payload = {
                     id: id[0],
                     username: username,
                   };
-                  console.log("Payload", payload);
+                  //   console.log("Payload", payload);
                   let token = jwt.sign(
                     payload,
                     config.JWT_SECRET
                   );
-                  console.log("token", token);
-                  return {
-                    message: "signedup",
+                  let object = {
                     token: token,
+                    message: "signedup",
                   };
+                  //   console.log("object", object);
+                  return object;
+                  //   return "signedup";
                 });
             });
         }
@@ -69,31 +73,32 @@ class UserService {
       .where({ username: username })
       .then((user) => {
         if (user.length > 0) {
-          console.log("user", user[0]);
+          //   console.log("user", user[0]);
           let hashedPassword = user[0].password;
           return bcrypt
             .checkPassword(password, hashedPassword)
             .then((verify) => {
-              console.log("Bcrypt is good: ", verify);
+              //   console.log("Bcrypt is good: ", verify);
               if (verify !== true) {
                 throw new Error("nah man wrong password");
               } else {
                 let payload = { ...user[0] };
-                console.log("User", payload);
+                // console.log("User", payload);
                 delete payload.password;
-                console.log(
-                  "Deleted password from payload",
-                  payload
-                );
+                // console.log(
+                //   "Deleted password from payload",
+                //   payload
+                // );
                 let token = jwt.sign(
                   payload,
                   config.JWT_SECRET
                 );
-                console.log("Token", token);
-                return {
-                  message: "loggedin",
+                let object = {
                   token: token,
+                  message: "loggedin",
                 };
+                // console.log("Token", object);
+                return object;
               }
             });
         }
@@ -106,7 +111,7 @@ class UserService {
     return this.knex("users")
       .select("*")
       .then((users) => {
-        console.log(users);
+        // console.log(users);
         return users;
       });
   }
@@ -118,7 +123,7 @@ class UserService {
       .select("*")
       .where({ id: id })
       .then((user) => {
-        console.log(user[0]);
+        // console.log(user[0]);
         return user[0];
       });
   }
@@ -131,6 +136,7 @@ class UserService {
       .where({ id: id })
       .then(() => {
         console.log("edited user");
+        return "edited";
       });
   }
   deleteUser(id) {
@@ -142,12 +148,38 @@ class UserService {
       .del()
       .then(() => {
         console.log("successfully deleted");
+        return "deleted";
       });
+  }
+  deleteByUsername(username) {
+    console.log(
+      "Hit delete user service. Should be able to delete user."
+    );
+    return this.knex("users")
+      .where({ username: username })
+      .del()
+      .then(() => {
+        console.log("successfully deleted");
+        return "deleted";
+      });
+  }
+  getByUsername(username) {
+    return this.knex("users")
+      .select("*")
+      .where({ username: username });
   }
 }
 
-let userService = new UserService(knex);
-// userService.signup("lezzles5", "orange");
+// let userService = new UserService(knex);
+// userService
+//   .signup("lezzl3es13330", "orange")
+//   .then((message) => {
+//     console.log(message);
+//   });
+
+// userService.getByUsername("lezzles1").then((user) => {
+//   console.log(user);
+// });
 // userService.login("lezzles4", "orange");
 // userService.getAllUsers();
 // userService.getUser(1);
@@ -158,3 +190,5 @@ let userService = new UserService(knex);
 // });
 
 // userService.deleteUser(1);
+
+module.exports = UserService;
