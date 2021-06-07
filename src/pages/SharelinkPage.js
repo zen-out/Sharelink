@@ -31,11 +31,13 @@ function LinkTable(props) {
   );
 }
 
-function FilterInput() {
+function FilterInput(props) {
   return (
     <div className="md-form form-group mt-5">
       <input
         type="text"
+        value={props.filter}
+        onChange={props.filterOnChange}
         className="form-control"
         id="formGroupExampleInput2MD"
         placeholder="Filter"
@@ -48,6 +50,7 @@ function SharelinkPage() {
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [tag, setTag] = useState("");
+  const [filter, setFilter] = useState("");
   const [links, setLinks] = useState([
     {
       title: "Reddit",
@@ -65,6 +68,28 @@ function SharelinkPage() {
   function tagOnChange(event) {
     setTag(event.target.value);
   }
+  function filterOnChange(event) {
+    setFilter(event.target.value);
+  }
+  // filter function here
+  function filterLinks(filter) {
+    const lowerSearch = filter.toLowerCase();
+    return links.filter((link) => {
+      return (
+        link.title.toLowerCase().indexOf(lowerSearch) >
+          -1 ||
+        link.url.toLowerCase().indexOf(lowerSearch) > -1 ||
+        link.tags
+          .map((tag) => {
+            return (
+              tag.toLowerCase().indexOf(lowerSearch) > -1
+            );
+          })
+          .indexOf(true) > -1
+      );
+    });
+  }
+
   function sepTags(string) {
     let newArr = string.split(",");
     for (let i = 0; i < newArr.length; i++) {
@@ -101,8 +126,11 @@ function SharelinkPage() {
         tagOnChange={tagOnChange}
         tag={tag}
       />
-      <FilterInput />
-      <LinkTable links={links} />
+      <FilterInput
+        filter={filter}
+        filterOnChange={filterOnChange}
+      />
+      <LinkTable links={filterLinks(filter)} />
     </div>
   );
 }
