@@ -60,6 +60,42 @@ class UserService {
     console.log(
       "Hit login service. Should be able to login."
     );
+    if (!username || !password) {
+      throw new Error("need username or password");
+    }
+    return this.knex("users")
+      .select("*")
+      .where({ username: username })
+      .then((user) => {
+        if (user.length > 0) {
+          console.log("user", user[0]);
+          let hashedPassword = user[0].password;
+          return bcrypt
+            .checkPassword(password, hashedPassword)
+            .then((verify) => {
+              console.log("Bcrypt is good: ", verify);
+              if (verify !== true) {
+                throw new Error("nah man wrong password");
+              } else {
+                let payload = { ...user[0] };
+                console.log("User", payload);
+                delete payload.password;
+                console.log(
+                  "Deleted password from payload",
+                  payload
+                );
+                let token = jwt.sign(
+                  payload,
+                  config.JWT_SECRET
+                );
+                console.log("Token", token);
+                return {
+                  token: token,
+                };
+              }
+            });
+        }
+      });
   }
   getAllUsers() {
     console.log(
@@ -84,4 +120,5 @@ class UserService {
 }
 
 let userService = new UserService(knex);
-userService.signup("lezzles5", "orange");
+// userService.signup("lezzles5", "orange");
+// userService.login("lezzles4", "orange");
