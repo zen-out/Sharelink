@@ -6,7 +6,7 @@ module.exports = {
   development: {
     client: "postgresql",
     connection: {
-      database: "debug",
+      database: "debugtest",
       user: "postgres",
       password: "postgres",
     },
@@ -14,7 +14,21 @@ module.exports = {
       directory: __dirname + "/migrations",
     },
   },
-
+  testing: {
+    client: "postgresql",
+    connection: {
+      database: "debugtest",
+      user: "postgres",
+      password: "postgres",
+    },
+    pool: {
+      min: 2,
+      max: 10,
+    },
+    migrations: {
+      tableName: "knex_migrations",
+    },
+  },
   production: {
     client: "postgresql",
     connection: {

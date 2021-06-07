@@ -49,6 +49,7 @@ class UserService {
                   );
                   console.log("token", token);
                   return {
+                    message: "signedup",
                     token: token,
                   };
                 });
@@ -90,6 +91,7 @@ class UserService {
                 );
                 console.log("Token", token);
                 return {
+                  message: "loggedin",
                   token: token,
                 };
               }
@@ -147,7 +149,7 @@ class UserService {
 let userService = new UserService(knex);
 // userService.signup("lezzles5", "orange");
 // userService.login("lezzles4", "orange");
-userService.getAllUsers();
+// userService.getAllUsers();
 // userService.getUser(1);
 
 // userService.editUser(1, {
