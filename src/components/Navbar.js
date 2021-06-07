@@ -1,15 +1,72 @@
 import React from "react";
 import {
   BrowserRouter as Router,
-  Router,
   Link,
+  Switch,
+  Route,
 } from "react-router-dom";
-
+import LoginPage from "../pages/LoginPage";
+import ReflectionsPage from "../pages/ReflectionsPage";
+import SharelinkPage from "../pages/SharelinkPage";
+import SignupPage from "../pages/SignupPage";
+import HomePage from "../pages/HomePage";
+import NoMatchPage from "../pages/NoMatchPage";
 function Navbar() {
   return (
-    <div>
-      <h1>Navbar</h1>
-    </div>
+    <Router>
+      <nav
+        className="navbar navbar-light blue lighten-4"
+        style={{ backgroundColor: "#e3f2fd" }}
+      >
+        <ul className="nav">
+          <li className="nav-item">
+            <Link className="nav-link" to="/">
+              Home
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/signup">
+              Signup
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/login">
+              Login
+            </Link>
+          </li>{" "}
+          <li className="nav-item">
+            <Link className="nav-link" to="/reflections">
+              Reflections
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/sharelink">
+              Sharelink
+            </Link>
+          </li>
+        </ul>
+      </nav>
+      <Switch>
+        <Route exact path="/" component={HomePage} />
+        <Route exact path="/login" component={LoginPage} />
+        <Route
+          exact
+          path="/signup"
+          component={SignupPage}
+        />
+        <Route
+          exact
+          path="/reflections"
+          component={ReflectionsPage}
+        />
+        <Route
+          exact
+          path="/sharelink"
+          component={SharelinkPage}
+        />
+        <Route component={NoMatchPage} />
+      </Switch>
+    </Router>
   );
 }
 
