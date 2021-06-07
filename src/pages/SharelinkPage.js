@@ -51,13 +51,14 @@ function SharelinkPage() {
   const [url, setUrl] = useState("");
   const [tag, setTag] = useState("");
   const [filter, setFilter] = useState("");
-  const [links, setLinks] = useState([
-    {
-      title: "Reddit",
-      url: "www.reddit.com",
-      tags: ["socialmedia", "fun"],
-    },
-  ]);
+  const storedLinks = localStorage.getItem("links");
+  const parsedLinks =
+    storedLinks === "" || storedLinks === null
+      ? []
+      : JSON.parse(storedLinks);
+  const [links, setLinks] = useState(
+    Array.isArray(parsedLinks) ? parsedLinks : []
+  );
 
   function titleOnChange(event) {
     setTitle(event.target.value);
@@ -112,6 +113,7 @@ function SharelinkPage() {
     setTitle("");
     setUrl("");
     setTag("");
+    localStorage.setItem("links", JSON.stringify(newLinks));
   }
   return (
     <div className="container">
