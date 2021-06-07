@@ -101,24 +101,58 @@ class UserService {
     console.log(
       "Hit getting all users service. Should be able to get all users."
     );
+    return this.knex("users")
+      .select("*")
+      .then((users) => {
+        console.log(users);
+        return users;
+      });
   }
   getUser(id) {
     console.log(
       "Hit get user service. Should be able to get user."
     );
+    return this.knex("users")
+      .select("*")
+      .where({ id: id })
+      .then((user) => {
+        console.log(user[0]);
+        return user[0];
+      });
   }
-  editUser(id) {
+  editUser(id, newUser) {
     console.log(
       "Hit edit user service. Should be able to edit user."
     );
+    return this.knex("users")
+      .update(newUser)
+      .where({ id: id })
+      .then(() => {
+        console.log("edited user");
+      });
   }
   deleteUser(id) {
     console.log(
       "Hit delete user service. Should be able to delete user."
     );
+    return this.knex("users")
+      .where({ id: id })
+      .del()
+      .then(() => {
+        console.log("successfully deleted");
+      });
   }
 }
 
 let userService = new UserService(knex);
 // userService.signup("lezzles5", "orange");
 // userService.login("lezzles4", "orange");
+userService.getAllUsers();
+// userService.getUser(1);
+
+// userService.editUser(1, {
+//   username: "ryan",
+//   password: "robert",
+// });
+
+// userService.deleteUser(1);
