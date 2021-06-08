@@ -11,7 +11,7 @@ class UserService {
     this.initialize();
   }
   initialize() {
-    return this.knex.migrate.latest();
+    this.knex.migrate.latest();
   }
   cleanup() {
     this.knex.destroy();
@@ -26,8 +26,7 @@ class UserService {
       .then((user) => {
         // console.log("User", user);
         if (user.length === 1) {
-          return "User already exists";
-          //   throw new Error("User already exists");
+          throw new Error("User already exists");
         } else {
           return bcrypt
             .hashPassword(password)
