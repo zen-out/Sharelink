@@ -8,10 +8,15 @@ import {
   GetBugsFailure,
   AddBugSuccess,
   AddBugFailure,
+  GetBugsThunk,
+  AddBugThunk,
 } from "../redux/actions/bug";
 
 describe("testing bug reducer", () => {
-  test("Get Bugs Thunk dispatches GetBugsSuccess", () => {});
+  test("Get Bugs Thunk dispatches GetBugsSuccess", () => {
+    // let getBugThunkState = GetBugsThunk("search", "userid");
+    // console.log(getBugThunkState);
+  });
   test("Get Bugs Thunk dispatches failure if invalid user id", () => {});
   test("Add Bug Thunk dispatches if valid user id", () => {});
   test("Add Bug Thunk dispatches fail if invalid user id", () => {});
@@ -26,6 +31,8 @@ describe("testing bug reducer", () => {
       error: false,
       message: "request",
       bugs: [],
+      search: "search",
+      userId: "userid",
     });
   });
   test("Get Bugs Success Action", () => {
@@ -81,13 +88,13 @@ describe("testing bug reducer", () => {
   test("Add Bug Failure Action", () => {
     const addBugFailureState = bugReducer(
       bugInitialState,
-      AddBugFailure
+      AddBugFailure("failure")
     );
     // console.log(addBugFailureState);
     expect(addBugFailureState).toEqual({
       loading: false,
-      error: false,
-      message: "",
+      error: true,
+      message: "failure",
       bugs: [],
     });
   });

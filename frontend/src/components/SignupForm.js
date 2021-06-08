@@ -1,9 +1,14 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function SignupForm(props) {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const userStore = useSelector((state) => state.userStore);
+  let authenticated = userStore.isAuthenticated;
+  const dispatch = useDispatch();
+  console.log(authenticated);
 
   function nameOnChange(event) {
     setName(event.target.value);

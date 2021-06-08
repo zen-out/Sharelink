@@ -1,0 +1,28 @@
+{
+  "bugs": [
+    {
+      "id": 1,
+      "problem": "data",
+      "whatactuallyis": "what",
+      "whatshouldbe": "what",
+      "hypothesis": "hypothesis",
+      "plan": "plan"
+    },
+    {
+      "id": 2,
+      "problem": "data",
+      "whatactuallyis": "what",
+      "whatshouldbe": "what",
+      "hypothesis": "hypothesis",
+      "plan": "plan"
+    }
+  ],
+  "users": [
+    {
+      "id": 1,
+      "name": "lesley",
+      "username": "lezzles",
+      "password": "orange"
+    }
+  ]
+}

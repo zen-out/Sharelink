@@ -1,8 +1,12 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 export default function LoginForm(props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const userStore = useSelector((state) => state.userStore);
+  console.log("User store", userStore);
+  const dispatch = useDispatch();
 
   function usernameOnChange(event) {
     setUsername(event.target.value);

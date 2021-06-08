@@ -11,6 +11,7 @@ import SharelinkPage from "../pages/SharelinkPage";
 import SignupPage from "../pages/SignupPage";
 import HomePage from "../pages/HomePage";
 import NoMatchPage from "../pages/NoMatchPage";
+import BugsPage from "../pages/BugsPage";
 
 function Navbar() {
   return (
@@ -45,6 +46,11 @@ function Navbar() {
               Sharelink
             </Link>
           </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/bugs">
+              Bugs
+            </Link>
+          </li>
         </ul>
       </nav>
       <Switch>
@@ -65,6 +71,7 @@ function Navbar() {
           path="/sharelink"
           component={SharelinkPage}
         />
+        <Route exact path="/bugs" component={BugsPage} />
         <Route component={NoMatchPage} />
       </Switch>
     </Router>

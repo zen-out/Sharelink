@@ -1,7 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import SharelinkBasic from "../components/SharelinkBasic";
-import { useSelector, useDispatch } from "react-redux";
-
 
 function SharelinkPage() {
   return (

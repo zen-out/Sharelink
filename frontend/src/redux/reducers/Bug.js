@@ -4,7 +4,7 @@ import {
   GET_BUGS_FAILURE,
   ADD_BUG_SUCCESS,
   ADD_BUG_FAILURE,
-} from "../actions/bug";
+} from "../actions/Bug";
 
 export const bugInitialState = {
   loading: false,
@@ -22,6 +22,8 @@ export function bugReducer(
         ...state,
         loading: true,
         message: "request",
+        search: action.payload.search,
+        userId: action.payload.userId,
       };
     case GET_BUGS_SUCCESS:
       return {
