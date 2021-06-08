@@ -28,6 +28,7 @@ class BugRouter {
     console.log(
       "Getting all bugs route. Should hit service next."
     );
+
     // get all bugs
   }
   getUserBugs(request, response) {
@@ -66,3 +67,4 @@ class BugRouter {
     // delete bug
   }
 }
+module.exports = BugRouter;

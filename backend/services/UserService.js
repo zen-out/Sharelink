@@ -3,12 +3,12 @@ const bcrypt = require("../utils/bcrypt");
 const config = require("../utils/config");
 const knexConfig = require("../knexfile").development;
 const knex = require("knex")(knexConfig);
-const jwt = require("jsonwebtoken");
-
+// const jwt = require("jsonwebtoken");
+const jwt = require("jwt-simple");
 class UserService {
   constructor(knex) {
     this.knex = knex;
-    this.initialize();
+    // this.initialize();
   }
   initialize() {
     this.knex.migrate.latest();
@@ -16,50 +16,43 @@ class UserService {
   cleanup() {
     this.knex.destroy();
   }
-  signup(username, password) {
+  async signup(name, username, password) {
     console.log(
       "Hit user service signup. Should be able to sign up user."
     );
-    return this.knex("users")
+    let checkUser = await this.knex("users")
       .select("*")
-      .where({ username: username })
-      .then((user) => {
-        // console.log("User", user);
-        if (user.length === 1) {
-          throw new Error("User already exists");
-        } else {
-          return bcrypt
-            .hashPassword(password)
-            .then((hashedPassword) => {
-              this.knex
-                .insert({
-                  username: username,
-                  password: hashedPassword,
-                })
-                .into("users")
-                .returning("id")
-                .then((id) => {
-                  let payload = {
-                    id: id[0],
-                    username: username,
-                  };
-                  //   console.log("Payload", payload);
-                  let token = jwt.sign(
-                    payload,
-                    config.JWT_SECRET
-                  );
-                  let object = {
-                    token: token,
-                    message: "signedup",
-                  };
-                  //   console.log("object", object);
-                  return object;
-                  //   return "signedup";
-                });
-            });
-        }
-      });
+      .where({ username: username });
+    if (checkUser[0]) {
+      throw new Error("User already exists");
+    } else {
+      let hashedPassword = await bcrypt.hashPassword(
+        password
+      );
+      let insertUser = await this.knex
+        .insert({
+          name: name,
+          username: username,
+          password: hashedPassword,
+        })
+        .into("users")
+        .returning("id")
+        .catch((error) => {
+          throw new Error("err", error);
+        });
+      let payload = {
+        id: insertUser[0],
+
+        name: name,
+        username: username,
+      };
+      let newToken = jwt.encode(payload, config.JWT_SECRET);
+      return {
+        token: newToken,
+      };
+    }
   }
+
   login(username, password) {
     console.log(
       "Hit login service. Should be able to login."

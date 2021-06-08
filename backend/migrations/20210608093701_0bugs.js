@@ -1,8 +1,6 @@
 exports.up = function (knex) {
   return knex.schema.createTable("bugs", (table) => {
     table.increments();
-    table.integer("user_id").unsigned();
-    table.foreign("user_id").references("users.id");
     table.string("problem");
     table.string("whatactuallyis");
     table.string("whatshouldbe");

@@ -27,17 +27,18 @@ class UserRouter {
     });
     // get all users
   }
+
   signup(request, response) {
     console.log(
       "Hit signup route. Should hit service next."
     );
+    let name = request.body.name;
     let username = request.body.username;
     let password = request.body.password;
     return this.userService
-      .signup(username, password)
+      .signup(name, username, password)
       .then((token) => {
-        console.log("token", token);
-        return token;
+        response.json(token);
       })
       .catch((error) => {
         console.log("error", error);
@@ -47,6 +48,17 @@ class UserRouter {
   login(request, response) {
     console.log("Hit login route. Should hit login next.");
     // post user
+    let username = request.body.username;
+    let password = request.body.password;
+    return this.userService
+      .login(username, password)
+      .then((token) => {
+        console.log("logged in - token", token);
+        console.log(token);
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
   }
   getUser(request, response) {
     console.log(

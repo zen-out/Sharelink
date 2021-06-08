@@ -6,9 +6,9 @@ class BugService {
     this.knex = knex;
     this.initialize();
   }
-  initialize() {
-    return this.knex.migrate.latest();
-  }
+  //   initialize() {
+  //     return this.knex.migrate.latest();
+  //   }
   cleanup() {
     return this.knex.destroy();
   }
