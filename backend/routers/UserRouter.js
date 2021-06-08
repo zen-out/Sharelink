@@ -54,7 +54,7 @@ class UserRouter {
       .login(username, password)
       .then((token) => {
         console.log("logged in - token", token);
-        console.log(token);
+        response.json(token);
       })
       .catch((error) => {
         console.log("error", error);
