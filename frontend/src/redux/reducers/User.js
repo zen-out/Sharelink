@@ -34,7 +34,7 @@ export function userReducer(
         isAuthenticated: true,
         isInvalid: false,
         isLoading: false,
-        token: action.token,
+        token: action.payload.token,
       };
     case SIGNUP_FAILURE:
       return {

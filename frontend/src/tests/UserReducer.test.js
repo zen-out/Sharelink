@@ -35,13 +35,14 @@ describe("user reducer", () => {
   test("signup success action", () => {
     let signupSuccessState = userReducer(
       userInitialState,
-      SignupSuccess()
+      SignupSuccess("token")
     );
     // console.log(signupSuccessState);
     expect(signupSuccessState).toEqual({
       isAuthenticated: true,
       isInvalid: false,
       isLoading: false,
+      token: "token",
     });
   });
   test("signup failure action", () => {
