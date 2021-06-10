@@ -21,19 +21,27 @@ class BugRouter {
       "/api/bugs/:userId",
       this.postBug.bind(this)
     );
-
+    router.get(
+      "/api/search/:userId/:search",
+      this.getSearchedBugs.bind(this)
+    );
     router.put("/api/bugs/:id", this.editBug.bind(this));
     router.delete(
       "/api/bugs/:id",
       this.deleteBug.bind(this)
     );
 
-    // test
-    router.post(
-      "/api/bugs/test/:bugId",
-      this.postTest.bind(this)
-    );
     return router;
+  }
+  getSearchedBugs(request, response) {
+    let search = request.params.search;
+    let userId = request.params.userId;
+    console.log("Search: ", search, "Userid", userId);
+    return this.bugService
+      .getSearchedBugs(search, userId)
+      .then((bugs) => {
+        response.send(bugs);
+      });
   }
   getAllBugs(request, response) {
     console.log(
@@ -61,15 +69,7 @@ class BugRouter {
       "Getting all tag bugs route. Should hit service next."
     );
   }
-  postTest(request, response) {
-    let tags = request.body.tags;
-    let bugId = request.params.bugId;
-    return this.bugService
-      .postThreeAddToBugsTags(tags, bugId)
-      .then((response) => {
-        console.log(response);
-      });
-  }
+
   postBug(request, response) {
     console.log(
       "Hitting post bug route. Should hit service next."

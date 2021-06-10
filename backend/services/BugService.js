@@ -140,6 +140,68 @@ class BugService {
         });
     });
   }
+
+  searchQuery(search, userId) {
+    return this.knex
+      .select(
+        "bugs.id",
+        "bugs.problem",
+        "bugs.whatshouldbe",
+        "bugs.whatactuallyis",
+        "bugs.hypothesis",
+        "bugs.plan"
+        // "bugs_tags.id",
+        // "tags.name"
+      )
+      .from("bugs")
+      .join("bugs_tags", "bugs.id", "bugs_tags.bug_id")
+      .join("tags", "bugs_tags.tag_id", "tags.id")
+      .join("users_bugs", "users_bugs.bug_id", "bugs.id")
+      .join("users", "users.id", "users_bugs.user_id")
+      .where("users.id", userId)
+      .andWhere((subcondition) => {
+        subcondition
+          .where("bugs.problem", "ilike", `%${search}%`)
+          .orWhere(
+            "bugs.whatshouldbe",
+            "ilike",
+            `%${search}%`
+          )
+          .orWhere(
+            "bugs.whatactuallyis",
+            "ilike",
+            `%${search}%`
+          )
+          .orWhere(
+            "bugs.hypothesis",
+            "ilike",
+            `%${search}%`
+          )
+          .orWhere("bugs.plan", "ilike", `%${search}%`)
+          .orWhere("tags.name", "ilike", `%${search}%`);
+      });
+  }
+  getTags(bugId) {
+    return this.knex
+      .select("tags.name")
+      .from("tags")
+      .join("bugs_tags", "bugs_tags.tag_id", "tags.id")
+      .where("bugs_tags.bug_id", bugId);
+  }
+  async getSearchedBugs(search, userId) {
+    let searchedArray = [];
+    let searchQuery = await this.searchQuery(
+      search,
+      userId
+    );
+    console.log(searchQuery);
+    for (let i = 0; i < searchQuery.length; i++) {
+      let tags = await this.getTags(searchQuery[i].id);
+      console.log(tags);
+      searchedArray.push({ ...searchQuery[i], tags: tags });
+    }
+    return searchedArray;
+  }
   editBug(id, newBug) {
     console.log(
       "Hit edit bug service. Should be able to edit bug."
