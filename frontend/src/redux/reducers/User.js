@@ -45,7 +45,6 @@ export function userReducer(
       };
     case LOGIN_REQUEST:
       return {
-        ...state,
         isLoading: true,
         username: action.payload.username,
         password: action.payload.password,

@@ -36,9 +36,18 @@ class BugRouter {
   getSearchedBugs(request, response) {
     let search = request.params.search;
     let userId = request.params.userId;
-    console.log("Search: ", search, "Userid", userId);
+
+    console.log(
+      "Hit search bug route",
+      "search:",
+      search,
+      "userid",
+      userId
+    );
+    console.log("Search:", search, " Userid", userId);
     return this.bugService
       .getSearchedBugs(search, userId)
+
       .then((bugs) => {
         response.send(bugs);
       });
@@ -74,7 +83,7 @@ class BugRouter {
     console.log(
       "Hitting post bug route. Should hit service next."
     );
-    let bug = request.body;
+    let bug = request.body.bug;
     let userId = request.params.userId;
     console.log(bug, userId);
     return this.bugService
@@ -82,8 +91,6 @@ class BugRouter {
       .then((bugServiceResponse) => {
         response.send(bugServiceResponse);
       });
-
-    // post bug
   }
   getBug(request, response) {
     console.log(

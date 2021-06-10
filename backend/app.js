@@ -26,6 +26,7 @@ app.post("/test", (request, response) => {
   response.send(request.body);
 });
 app.get("/", (request, response) => {
+    
   response.send("hello");
 });
 

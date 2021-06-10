@@ -37,7 +37,7 @@ function ToDoList() {
 }
 function App() {
   return (
-    <div className="App">
+    <div className="App font4">
       <Navbar />
       <ToDoList />
     </div>

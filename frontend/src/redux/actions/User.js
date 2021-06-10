@@ -18,15 +18,8 @@ export function SignupThunk(name, username, password) {
         password,
       })
       .then((data) => {
-        if (!data.token) {
-          dispatch(SignupFailure("No token"));
-        }
-        console.log(
-          "Signed up - set up token",
-          data.data.token
-        );
         localStorage.setItem("token", data.data.token);
-        dispatch(SignupSuccess(data.token));
+        dispatch(SignupSuccess(data.data.token));
       })
       .catch((error) => {
         dispatch(SignupFailure(error));
@@ -36,19 +29,15 @@ export function SignupThunk(name, username, password) {
 
 export function LoginThunk(username, password) {
   return (dispatch) => {
-    dispatch(SignupRequest(username, password));
+    dispatch(LoginRequest(username, password));
     axios
       .post("http://localhost:3001/api/login", {
         username,
         password,
       })
       .then((data) => {
-        console.log("data returned", data);
-        if (!data.token) {
-          dispatch(LoginFailure("no token"));
-        }
-
-        dispatch(LoginSuccess(data.token));
+        localStorage.setItem("token", data.data.token);
+        dispatch(LoginSuccess(data.data.token));
       })
       .catch((error) => {
         dispatch(LoginFailure(error));

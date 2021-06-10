@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BACKEND_PORT } from "../../utilities/config";
-let BUGS_URL = BACKEND_PORT + "/api/bugs";
+let BUGS_URL = BACKEND_PORT;
 // let USERS_URL = "http://localhost:3000/api/signup";
 
 export const GET_BUGS_REQUEST = "GET_BUGS_REQUEST";
@@ -65,8 +65,12 @@ export function GetBugsThunk(search, userId) {
   return function (dispatch) {
     dispatch(GetBugsRequest(search, userId));
     return axios
-      .get(`${BUGS_URL}/${userId}`)
+      .get(`${BUGS_URL}/api/search/${userId}/${search}`)
       .then((response) => {
+        console.log(
+          "Get bugs thunk, should get all the data back here"
+        );
+        console.log(response);
         dispatch(GetBugsSuccess(response.data));
       })
       .catch((error) => {
@@ -78,7 +82,10 @@ export function GetBugsThunk(search, userId) {
 export function AddBugThunk(bug, userId) {
   return function (dispatch) {
     return axios
-      .post(BUGS_URL, { bug: bug, userId: userId })
+      .post(`${BUGS_URL}/api/bugs/${userId}`, {
+        bug: bug,
+        userId: userId,
+      })
       .then((response) => {
         console.log("Posted - response: ", response);
         dispatch(AddBugSuccess(bug, userId));

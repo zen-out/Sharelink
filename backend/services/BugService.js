@@ -114,31 +114,52 @@ class BugService {
         }
       });
   }
-  postBug(bug, userId) {
+  async postBug(bug, userId) {
     console.log(
       "Hit post bug service. Should be able to post bug."
     );
-    let BUG_ID;
     let USER_ID = parseInt(userId);
-    return this.postOneAddToBugs(bug).then((bugId) => {
-      BUG_ID = bugId[0];
-      console.log(
-        "first step done, posted to bugs table with bug id",
-        BUG_ID,
-        "userid",
-        USER_ID
+    console.log("Bug", bug.bug);
+    console.log("userid", USER_ID);
+    let realBug = bug.bug;
+    let addToBugs = await this.postOneAddToBugs(realBug);
+    console.log("Add to bugs", addToBugs[0]);
+    let BUG_ID = addToBugs[0];
+    let addToUsersBugs = await this.postTwoAddToUsersBugs(
+      BUG_ID,
+      USER_ID
+    );
+    console.log("Added to users bugs", addToUsersBugs[0]);
+    console.log(realBug.tags);
+
+    for (let i = 0; i < realBug.tags.length; i++) {
+      let addToTags = await this.postThreeAddToBugsTags(
+        realBug.tags[i],
+        BUG_ID
       );
-      return this.postTwoAddToUsersBugs(BUG_ID, USER_ID)
-        .then(() => {
-          return bug.tags.map((tag) => {
-            console.log("Mapping tag", tag);
-            return this.postThreeAddToBugsTags(tag, BUG_ID);
-          });
-        })
-        .then(() => {
-          return "done";
-        });
-    });
+      console.log(addToTags[0]);
+    }
+    return "done";
+
+    // return this.postOneAddToBugs(bug).then((bugId) => {
+    //   BUG_ID = bugId[0];
+    //   console.log(
+    //     "first step done, posted to bugs table with bug id",
+    //     BUG_ID,
+    //     "userid",
+    //     USER_ID
+    //   );
+    //   return this.postTwoAddToUsersBugs(BUG_ID, USER_ID)
+    //     .then(() => {
+    //       return bug.tags.map((tag) => {
+    //         console.log("Mapping tag", tag);
+    //         return this.postThreeAddToBugsTags(tag, BUG_ID);
+    //       });
+    //     })
+    //     .then(() => {
+    //       return "done";
+    //     });
+    // });
   }
 
   searchQuery(search, userId) {
@@ -194,7 +215,6 @@ class BugService {
       search,
       userId
     );
-    console.log(searchQuery);
     for (let i = 0; i < searchQuery.length; i++) {
       let tags = await this.getTags(searchQuery[i].id);
       console.log(tags);

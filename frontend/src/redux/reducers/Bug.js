@@ -51,6 +51,7 @@ export function bugReducer(
               whatshouldbe: action.bug.whatshouldbe,
               hypothesis: action.bug.hypothesis,
               plan: action.bug.plan,
+              tags: action.bug.tags,
             },
             userId: action.userId,
           },

@@ -70,6 +70,16 @@ export default function SignupForm(props) {
             >
               Signup
             </button>
+
+            <small class="form-text text-muted mb-4">
+              <ol>
+                <li>
+                  Passes through SignupThunk(name, username,
+                  password)
+                </li>
+                <li>Dispatches Signup</li>
+              </ol>
+            </small>
           </form>
         </div>
       </section>

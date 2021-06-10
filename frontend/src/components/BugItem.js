@@ -11,6 +11,12 @@ function BugItem(props) {
       <td>{props.bug.whatactuallyis}</td>
       <td>{props.bug.hypothesis}</td>
       <td>{props.bug.plan}</td>
+      <td>
+        {/* {props.bugs.tags &&
+          props.bug.tags.map((tag, index) => {
+            <li key={index}>{tag.name}</li>;
+          })} */}
+      </td>
     </tr>
   );
 }

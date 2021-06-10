@@ -3,15 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { GetBugsThunk } from "../redux/actions/Bug";
 import BugItem from "./BugItem";
 
-function BugList() {
-  const bugStore = useSelector((state) => state.bugStore);
-  const bugList = bugStore.bugs;
-  console.log("Bug list", bugList);
-  const dispatch = useDispatch();
-
-  function getBugs() {
-    dispatch(GetBugsThunk());
-  }
+function BugList(props) {
   return (
     <div>
       <h1>Bug List</h1>
@@ -24,10 +16,11 @@ function BugList() {
             <th scope="col">What actually is</th>
             <th scope="col">Hypothesis</th>
             <th scope="col">Plan</th>
+            <th scope="col">Tags</th>
           </tr>
         </thead>
         <tbody>
-          {bugList.map((bug, index) => {
+          {props.bugList.map((bug, index) => {
             return (
               <BugItem
                 key={index}
@@ -38,7 +31,7 @@ function BugList() {
           })}
         </tbody>
       </table>
-      <button onClick={getBugs}>Get Bugs</button>
+      <button onClick={props.getBugs}>Get Bugs</button>
     </div>
   );
 }
