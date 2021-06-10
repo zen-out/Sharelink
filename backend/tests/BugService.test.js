@@ -20,8 +20,15 @@ describe("testing bug service", () => {
       whatshouldbe: "hard",
       hypothesis: "expectations",
       plan: "lowerthem",
+      tags: ["hello"],
     });
   });
+
+  test("able to use search query", () => {
+    // given search query and user id, should return all search queries that have that tag, problem, what actually is, what should be, hypothesis and plan
+      
+  });
+
   test("able to delete bug", () => {
     return testBugService.deleteBug(1).then((message) => {
       expect(message).toBe("deleted");

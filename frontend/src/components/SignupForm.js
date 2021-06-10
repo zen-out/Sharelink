@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-
+import { SignupThunk } from "../redux/actions/User";
 export default function SignupForm(props) {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
@@ -21,12 +21,10 @@ export default function SignupForm(props) {
   }
   function formOnSubmit(event) {
     event.preventDefault();
-    let user = {
-      name: name,
-      username: username,
-      password: password,
-    };
-    console.log("User", user);
+    dispatch(SignupThunk(name, username, password));
+    setUsername("");
+    setPassword("");
+    setName("");
   }
 
   return (
@@ -35,7 +33,6 @@ export default function SignupForm(props) {
         <div className="row d-flex justify-content-center">
           <form
             className="text-center"
-            action="/login"
             onSubmit={formOnSubmit}
             method="post"
           >

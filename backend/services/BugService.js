@@ -4,7 +4,7 @@ const knex = require("knex")(knexConfig);
 class BugService {
   constructor(knex) {
     this.knex = knex;
-    this.initialize();
+    // this.initialize();
   }
   //   initialize() {
   //     return this.knex.migrate.latest();
@@ -12,6 +12,7 @@ class BugService {
   cleanup() {
     return this.knex.destroy();
   }
+
   getAllBugs() {
     console.log(
       "Hit getting all bug service. Should list all bugs here."
@@ -42,15 +43,102 @@ class BugService {
     console.log("Hit getting bug service. Should get bug");
     return this.knex("bugs").select("*").where({ id: id });
   }
-  postBug(bug) {
+
+  postOneAddToBugs(bug) {
+    return this.knex
+      .insert({
+        problem: bug.problem,
+        whatshouldbe: bug.whatshouldbe,
+        whatactuallyis: bug.whatactuallyis,
+        hypothesis: bug.hypothesis,
+        plan: bug.plan,
+      })
+      .into("bugs")
+      .returning("id")
+      .catch((error) => {
+        throw new Error(error);
+      });
+  }
+  postTwoAddToUsersBugs(bugId, userId) {
+    return this.knex
+      .insert({
+        bug_id: bugId,
+        user_id: userId,
+      })
+      .into("users_bugs")
+      .returning("id")
+      .catch((error) => {
+        throw new Error(error);
+      });
+  }
+
+  postBugsTags(bugId, tagId) {
+    return this.knex
+      .insert({ bug_id: bugId, tag_id: tagId })
+      .into("bugs_tags")
+      .returning("id")
+      .catch((error) => {
+        throw new Error(error);
+      });
+  }
+  postThreeAddToBugsTags(tag, bugId) {
+    return this.knex
+      .select("*")
+      .from("tags")
+      .where({ name: tag.name })
+      .then((data) => {
+        return data;
+      })
+      .then((doesTagNameExist) => {
+        if (doesTagNameExist[0] === undefined) {
+          console.log("tag doesn't exist yet");
+          return this.knex
+            .insert({ name: tag.name })
+            .into("tags")
+            .returning("id")
+            .then((tagId) => {
+              console.log("doesn't exist", tagId[0]);
+              return this.postBugsTags(
+                bugId,
+                tagId[0]
+              ).then((id) => {
+                return id;
+              });
+            });
+        } else {
+          console.log("tag exists");
+          return this.postBugsTags(
+            bugId,
+            doesTagNameExist[0].id
+          );
+        }
+      });
+  }
+  postBug(bug, userId) {
     console.log(
       "Hit post bug service. Should be able to post bug."
     );
-    return this.knex("bugs")
-      .insert(bug)
-      .then(() => {
-        return "posted";
-      });
+    let BUG_ID;
+    let USER_ID = parseInt(userId);
+    return this.postOneAddToBugs(bug).then((bugId) => {
+      BUG_ID = bugId[0];
+      console.log(
+        "first step done, posted to bugs table with bug id",
+        BUG_ID,
+        "userid",
+        USER_ID
+      );
+      return this.postTwoAddToUsersBugs(BUG_ID, USER_ID)
+        .then(() => {
+          return bug.tags.map((tag) => {
+            console.log("Mapping tag", tag);
+            return this.postThreeAddToBugsTags(tag, BUG_ID);
+          });
+        })
+        .then(() => {
+          return "done";
+        });
+    });
   }
   editBug(id, newBug) {
     console.log(

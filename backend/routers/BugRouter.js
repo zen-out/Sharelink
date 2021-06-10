@@ -8,19 +8,30 @@ class BugRouter {
     let router = express.Router();
     router.get("/api/bugs", this.getAllBugs.bind(this));
     router.get(
-      "/api/users/:id/bugs",
+      "/api/users/:userId/bugs",
       this.getUserBugs.bind(this)
     );
     router.get(
-      "/api/tags/:id/bugs",
+      "/api/tags/:tagId/bugs",
       this.getTagBugs.bind(this)
     );
     router.get("/api/bugs/:id", this.getBug.bind(this));
-    router.post("/api/bugs", this.postBug.bind(this));
+
+    router.post(
+      "/api/bugs/:userId",
+      this.postBug.bind(this)
+    );
+
     router.put("/api/bugs/:id", this.editBug.bind(this));
     router.delete(
       "/api/bugs/:id",
       this.deleteBug.bind(this)
+    );
+
+    // test
+    router.post(
+      "/api/bugs/test/:bugId",
+      this.postTest.bind(this)
     );
     return router;
   }
@@ -28,6 +39,9 @@ class BugRouter {
     console.log(
       "Getting all bugs route. Should hit service next."
     );
+    return this.bugService.getAllBugs().then((bugs) => {
+      response.json(bugs);
+    });
 
     // get all bugs
   }
@@ -35,17 +49,40 @@ class BugRouter {
     console.log(
       "Getting all user bugs route. Should hit service next."
     );
+    let userId = request.params.userId;
+    return this.bugService
+      .getUserBugs(userId)
+      .then((bugs) => {
+        response.json(bugs);
+      });
   }
   getTagBugs(request, response) {
     console.log(
       "Getting all tag bugs route. Should hit service next."
     );
   }
-
+  postTest(request, response) {
+    let tags = request.body.tags;
+    let bugId = request.params.bugId;
+    return this.bugService
+      .postThreeAddToBugsTags(tags, bugId)
+      .then((response) => {
+        console.log(response);
+      });
+  }
   postBug(request, response) {
     console.log(
       "Hitting post bug route. Should hit service next."
     );
+    let bug = request.body;
+    let userId = request.params.userId;
+    console.log(bug, userId);
+    return this.bugService
+      .postBug(bug, userId)
+      .then((bugServiceResponse) => {
+        response.send(bugServiceResponse);
+      });
+
     // post bug
   }
   getBug(request, response) {

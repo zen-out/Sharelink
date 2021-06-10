@@ -1,5 +1,4 @@
 const express = require("express");
-const bodyParser = require("body-parser");
 
 class UserRouter {
   constructor(userService) {
@@ -38,6 +37,7 @@ class UserRouter {
     return this.userService
       .signup(name, username, password)
       .then((token) => {
+        console.log(token);
         response.json(token);
       })
       .catch((error) => {
@@ -64,12 +64,19 @@ class UserRouter {
     console.log(
       "Hit get user route. Should hit service next."
     );
+    let user = request.params.id;
+    return this.userService.getUser(user).then((user) => {
+      response.json(user);
+    });
     // get specific user
   }
   editUser(request, response) {
     console.log(
       "Hit edit user route. Should hit service next."
     );
+    let id = request.params.id;
+    let newUser = request.body.newUser;
+
     // edit user
   }
   deleteUser(request, response) {

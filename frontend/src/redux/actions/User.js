@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const SIGNUP_REQUEST = "SIGNUP_REQUEST";
 export const SIGNUP_SUCCESS = "SIGNUP_SUCCESS";
 export const SIGNUP_FAILURE = "SIGNUP_FAILURE";
@@ -6,9 +8,53 @@ export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
 export const LOGIN_FAILURE = "LOGIN_FAILURE";
 export const LOGOUT = "LOGOUT";
 
-export function SignupThunk(name, username, password) {}
+export function SignupThunk(name, username, password) {
+  return (dispatch) => {
+    dispatch(SignupRequest(name, username, password));
+    axios
+      .post("http://localhost:3001/api/signup", {
+        name,
+        username,
+        password,
+      })
+      .then((data) => {
+        if (!data.token) {
+          dispatch(SignupFailure("No token"));
+        }
+        console.log(
+          "Signed up - set up token",
+          data.data.token
+        );
+        localStorage.setItem("token", data.data.token);
+        dispatch(SignupSuccess(data.token));
+      })
+      .catch((error) => {
+        dispatch(SignupFailure(error));
+      });
+  };
+}
 
-export function LoginThunk(username, password) {}
+export function LoginThunk(username, password) {
+  return (dispatch) => {
+    dispatch(SignupRequest(username, password));
+    axios
+      .post("http://localhost:3001/api/login", {
+        username,
+        password,
+      })
+      .then((data) => {
+        console.log("data returned", data);
+        if (!data.token) {
+          dispatch(LoginFailure("no token"));
+        }
+
+        dispatch(LoginSuccess(data.token));
+      })
+      .catch((error) => {
+        dispatch(LoginFailure(error));
+      });
+  };
+}
 
 export function SignupRequest(name, username, password) {
   return {

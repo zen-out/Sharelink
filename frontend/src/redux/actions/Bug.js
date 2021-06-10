@@ -1,6 +1,7 @@
 import axios from "axios";
-let BUGS_URL = "http://localhost:3000/bugs";
-// let USERS_URL = "http://localhost:3000/users";
+import { BACKEND_PORT } from "../../utilities/config";
+let BUGS_URL = BACKEND_PORT + "/api/bugs";
+// let USERS_URL = "http://localhost:3000/api/signup";
 
 export const GET_BUGS_REQUEST = "GET_BUGS_REQUEST";
 export const GET_BUGS_SUCCESS = "GET_BUGS_SUCCESS";
@@ -46,6 +47,7 @@ export function AddBugSuccess(bug, userId) {
       whatshouldbe: bug.whatshouldbe,
       hypothesis: bug.hypothesis,
       plan: bug.plan,
+      tags: bug.tags,
     },
   };
 }
@@ -61,8 +63,9 @@ export function AddBugFailure(error) {
 
 export function GetBugsThunk(search, userId) {
   return function (dispatch) {
+    dispatch(GetBugsRequest(search, userId));
     return axios
-      .get(BUGS_URL)
+      .get(`${BUGS_URL}/${userId}`)
       .then((response) => {
         dispatch(GetBugsSuccess(response.data));
       })
@@ -72,4 +75,16 @@ export function GetBugsThunk(search, userId) {
   };
 }
 
-export function AddBugThunk(bug, userId) {}
+export function AddBugThunk(bug, userId) {
+  return function (dispatch) {
+    return axios
+      .post(BUGS_URL, { bug: bug, userId: userId })
+      .then((response) => {
+        console.log("Posted - response: ", response);
+        dispatch(AddBugSuccess(bug, userId));
+      })
+      .catch((error) => {
+        dispatch(AddBugFailure(error));
+      });
+  };
+}
