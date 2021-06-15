@@ -8,6 +8,25 @@ export const GET_BUGS_SUCCESS = "GET_BUGS_SUCCESS";
 export const GET_BUGS_FAILURE = "GET_BUGS_FAILURE";
 export const ADD_BUG_SUCCESS = "ADD_BUG_SUCCESS";
 export const ADD_BUG_FAILURE = "ADD_BUG_FAILURE";
+export const DELETE_BUG_SUCCESS = "DELETE_BUG_SUCCESS";
+export const DELETE_BUG_FAILURE = "DELETE_BUG_FAILURE";
+
+export function DeleteBugSuccess(data) {
+  return {
+    type: DELETE_BUG_SUCCESS,
+    payload: {
+      data: data,
+    },
+  };
+}
+export function DeleteBugFailure(error) {
+  return {
+    type: DELETE_BUG_FAILURE,
+    payload: {
+      error: error,
+    },
+  };
+}
 
 export function GetBugsRequest(search, userId) {
   return {
@@ -61,6 +80,19 @@ export function AddBugFailure(error) {
   };
 }
 
+export function DeleteBugThunk(bugId) {
+  return function (dispatch) {
+    return axios
+      .delete(`${BUGS_URL}/api/bugs/${bugId}`)
+      .then((data) => {
+        console.log("data", data.data);
+        dispatch(DeleteBugSuccess(data.data));
+      })
+      .catch((error) => {
+        dispatch(DeleteBugFailure(error));
+      });
+  };
+}
 export function GetBugsThunk(search, userId) {
   return function (dispatch) {
     dispatch(GetBugsRequest(search, userId));

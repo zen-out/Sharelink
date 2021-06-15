@@ -24,6 +24,7 @@ function BugList(props) {
                 key={index}
                 index={index}
                 bug={bug}
+                deleteBug={() => props.deleteBug(bug.id)}
               />
             );
           })}

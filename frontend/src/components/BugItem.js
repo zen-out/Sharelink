@@ -6,16 +6,53 @@ function BugItem(props) {
       <th scope="row">
         index: {props.index}, id: {props.bug.id}
       </th>
-      <td>{props.bug.problem}</td>
-      <td>{props.bug.whatshouldbe}</td>
-      <td>{props.bug.whatactuallyis}</td>
-      <td>{props.bug.hypothesis}</td>
-      <td>{props.bug.plan}</td>
+      <td>
+        <input type="text" value={props.bug.problem} />
+      </td>
+      <td>
+        <input type="text" value={props.bug.whatshouldbe} />
+      </td>
+      <td>
+        {" "}
+        <input
+          type="text"
+          value={props.bug.whatactuallyis}
+        />
+      </td>
+      <td>
+        {" "}
+        <input type="text" value={props.bug.hypothesis} />
+      </td>
+      <td>
+        {" "}
+        <input type="text" value={props.bug.plan} />
+      </td>
       <td>
         {props.bug.tags &&
           props.bug.tags.map((tag, index) => {
-            return <li key={index}>{tag.name}</li>;
+            return (
+              <input
+                type="text"
+                key={index}
+                value={tag.name}
+              />
+            );
           })}
+      </td>
+      <td>
+        <button
+          type="button"
+          className="btn btn-outline-dark waves-effect"
+        >
+          Edit
+        </button>
+        <button
+          type="button"
+          onClick={() => props.deleteBug(props.bug.id)}
+          className="btn btn-outline-dark waves-effect"
+        >
+          Delete
+        </button>
       </td>
     </tr>
   );

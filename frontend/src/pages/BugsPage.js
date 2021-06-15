@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import {
   GetBugsThunk,
   AddBugThunk,
+  DeleteBugThunk,
 } from "../redux/actions/Bug";
 import { JWT_SECRET } from "../utilities/config";
 function BugsPage() {
@@ -76,6 +77,10 @@ function BugsPage() {
   function filterOnChange(event) {
     setFilter(event.target.value);
   }
+  function deleteBug(id) {
+    console.log("id", id);
+    dispatch(DeleteBugThunk(id));
+  }
 
   return (
     <div>
@@ -111,7 +116,11 @@ function BugsPage() {
       >
         Find bugs
       </button>
-      <BugList bugList={bugList} getBugs={getBugs} />
+      <BugList
+        bugList={bugList}
+        getBugs={getBugs}
+        deleteBug={deleteBug}
+      />
     </div>
   );
 }
