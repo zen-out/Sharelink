@@ -75,7 +75,12 @@ class UserRouter {
       "Hit edit user route. Should hit service next."
     );
     let id = request.params.id;
-    let newUser = request.body.newUser;
+    let newUser = request.body;
+    return this.userService
+      .editUser(id, newUser)
+      .then((edited) => {
+        response.send(edited);
+      });
 
     // edit user
   }
@@ -83,6 +88,12 @@ class UserRouter {
     console.log(
       "Hit delete user route. Should hit service next."
     );
+    let id = request.params.id;
+    return this.userService
+      .deleteUser(id)
+      .then((deleted) => {
+        response.send(deleted);
+      });
     // delete user
   }
 }

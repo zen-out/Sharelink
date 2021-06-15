@@ -123,12 +123,23 @@ class UserService {
     console.log(
       "Hit delete user service. Should be able to delete user."
     );
-    return this.knex("users")
-      .where({ id: id })
+    return this.knex("users_bugs")
+      .select("*")
+      .where({ user_id: id })
       .del()
       .then(() => {
-        console.log("successfully deleted");
-        return "deleted";
+        console.log("deleted all users bugs");
+        return this.knex("users")
+          .select("*")
+          .where({ id: id })
+          .del()
+          .then(() => {
+            console.log("deleted user");
+            return "deleted";
+          });
+      })
+      .catch((error) => {
+        console.log("error", error);
       });
   }
   deleteByUsername(username) {

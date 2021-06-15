@@ -27,7 +27,6 @@ function AddBugForm(props) {
               className="form-control mb-4"
               placeholder="What Should Be Happening?"
             />
-
             <input
               type="text"
               value={props.whatActuallyIs}
@@ -64,13 +63,13 @@ function AddBugForm(props) {
                 />
               );
             })}
+
             <button
               onClick={props.addTag}
               className="btn btn-outline-dark waves-effect"
             >
               Add Tag
             </button>
-
             <br />
             <button
               type="submit"
