@@ -21,6 +21,9 @@ class BugService {
       .select("*")
       .then((bugs) => {
         return bugs;
+      })
+      .catch((error) => {
+        throw new Error("error", error);
       });
   }
   getUserBugs(id) {
@@ -44,6 +47,9 @@ class BugService {
       .where({ user_id: id })
       .then((bug) => {
         return bug;
+      })
+      .catch((error) => {
+        throw new Error("error", error);
       });
   }
   getTagBugs(id) {
@@ -53,7 +59,12 @@ class BugService {
   }
   getBug(id) {
     console.log("Hit getting bug service. Should get bug");
-    return this.knex("bugs").select("*").where({ id: id });
+    return this.knex("bugs")
+      .select("*")
+      .where({ id: id })
+      .catch((error) => {
+        throw new Error("error", error);
+      });
   }
 
   postOneAddToBugs(bug) {
@@ -210,6 +221,9 @@ class BugService {
           )
           .orWhere("bugs.plan", "ilike", `%${search}%`)
           .orWhere("tags.name", "ilike", `%${search}%`);
+      })
+      .catch((error) => {
+        throw new Error("error", error);
       });
   }
   getTags(bugId) {
@@ -217,7 +231,10 @@ class BugService {
       .select("tags.name")
       .from("tags")
       .join("bugs_tags", "bugs_tags.tag_id", "tags.id")
-      .where("bugs_tags.bug_id", bugId);
+      .where("bugs_tags.bug_id", bugId)
+      .catch((error) => {
+        throw new Error("error", error);
+      });
   }
   async getSearchedBugs(search, userId) {
     let searchedArray = [];
@@ -251,6 +268,9 @@ class BugService {
       .update(newBug)
       .then(() => {
         return "edited";
+      })
+      .catch((error) => {
+        throw new Error("error", error);
       });
   }
   deleteBug(id) {
@@ -278,6 +298,9 @@ class BugService {
                 return "deleted from three tables";
               });
           });
+      })
+      .catch((error) => {
+        throw new Error("error", error);
       });
   }
 }

@@ -1,3 +1,5 @@
+## Users
+
 POST /api/signup
 
 ```
@@ -71,3 +73,97 @@ PUT /api/users/26
 ```
 
 DELETE /api/users/26
+
+## Bugs
+
+GET /api/bugs
+
+```
+[
+    {
+        "id": 49,
+        "problem": "asdf",
+        "whatactuallyis": "easy",
+        "whatshouldbe": "asdfasdf",
+        "hypothesis": "fuck",
+        "plan": "yolo",
+        "created_at": "2021-06-10T04:28:09.841Z",
+        "updated_at": "2021-06-10T04:28:09.841Z"
+    }
+]
+```
+
+GET /api/users/:userId/bugs
+
+```
+[
+    {
+        "id": 58,
+        "problem": null,
+        "whatshouldbe": null,
+        "whatactuallyis": null,
+        "hypothesis": null,
+        "plan": null
+    },
+]
+```
+
+GET /api/bugs/:id
+
+```
+{
+    "id": 58,
+    "problem": null,
+    "whatactuallyis": null,
+    "whatshouldbe": null,
+    "hypothesis": null,
+    "plan": null,
+    "created_at": "2021-06-10T05:27:44.442Z",
+    "updated_at": "2021-06-10T05:27:44.442Z"
+}
+```
+
+POST /api/bugs/:userId
+
+GET /api/search/:userId/:search
+
+```
+[
+     {
+        "id": 62,
+        "problem": "asdf",
+        "whatshouldbe": "asdfasdfa",
+        "whatactuallyis": "asdf",
+        "hypothesis": "asdf",
+        "plan": "asdfasdf",
+        "tags": [
+            {
+                "name": "asdf"
+            },
+            {
+                "name": "asdf"
+            }
+        ]
+    },
+]
+```
+
+PUT /api/bugs/:id
+
+```
+{
+    "problem": "new problem",
+    "whatactuallyis": "new what actually is",
+    "whatshouldbe": "new what should be",
+    "hypothesis": "new hypothesis",
+    "plan": "new plan"
+}
+```
+
+return "edited"
+
+DELETE /api/bugs/:id
+
+```
+"deleted from three tables"
+```
