@@ -27,8 +27,20 @@ class BugService {
     console.log(
       "Hit getting all users' bugs service. Should get all users' bugs."
     );
+    // join tables with users_bugs
     return this.knex("bugs")
-      .select("*")
+      .select(
+        "bugs.id",
+        "bugs.problem",
+        "bugs.whatshouldbe",
+        "bugs.whatshouldbe",
+        "bugs.whatactuallyis",
+        "bugs.hypothesis",
+        "bugs.plan"
+      )
+      .from("bugs")
+      .join("users_bugs", "users_bugs.bug_id", "bugs.id")
+      .join("users", "users.id", "users_bugs.user_id")
       .where({ user_id: id })
       .then((bug) => {
         return bug;
@@ -171,8 +183,6 @@ class BugService {
         "bugs.whatactuallyis",
         "bugs.hypothesis",
         "bugs.plan"
-        // "bugs_tags.id",
-        // "tags.name"
       )
       .from("bugs")
       .join("bugs_tags", "bugs.id", "bugs_tags.bug_id")
@@ -220,7 +230,17 @@ class BugService {
       console.log(tags);
       searchedArray.push({ ...searchQuery[i], tags: tags });
     }
-    return searchedArray;
+    // make sure each item in the array has a unique id
+    const res = [
+      ...searchedArray
+        .reduce((a, c) => {
+          a.set(c.id, c);
+          return a;
+        }, new Map())
+        .values(),
+    ];
+
+    return res;
   }
   editBug(id, newBug) {
     console.log(
@@ -237,11 +257,27 @@ class BugService {
     console.log(
       "Hit delete bug service. Should be able to delete bug."
     );
-    return this.knex("bugs")
-      .where({ id: id })
+    // delete from bugs_tags where bug_id = id
+    // delete from users_bugs where bug_id = id
+    // delete from bugs where id=id
+    return this.knex("users_bugs")
+      .where({ bug_id: id })
       .del()
       .then(() => {
-        return "deleted";
+        console.log("deleted bug from users_bugs");
+        return this.knex("bugs_tags")
+          .where({ bug_id: id })
+          .del()
+          .then(() => {
+            console.log("deleted bug from bugs_tags");
+            return this.knex("bugs")
+              .where({ id: id })
+              .del()
+              .then(() => {
+                console.log("deleted bug from bugs");
+                return "deleted from three tables";
+              });
+          });
       });
   }
 }

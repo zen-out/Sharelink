@@ -11,10 +11,6 @@ class BugRouter {
       "/api/users/:userId/bugs",
       this.getUserBugs.bind(this)
     );
-    router.get(
-      "/api/tags/:tagId/bugs",
-      this.getTagBugs.bind(this)
-    );
     router.get("/api/bugs/:id", this.getBug.bind(this));
 
     router.post(
@@ -33,6 +29,7 @@ class BugRouter {
 
     return router;
   }
+  // api/search/:userId/:search
   getSearchedBugs(request, response) {
     let search = request.params.search;
     let userId = request.params.userId;
@@ -52,6 +49,7 @@ class BugRouter {
         response.send(bugs);
       });
   }
+  // api/bugs
   getAllBugs(request, response) {
     console.log(
       "Getting all bugs route. Should hit service next."
@@ -73,12 +71,6 @@ class BugRouter {
         response.json(bugs);
       });
   }
-  getTagBugs(request, response) {
-    console.log(
-      "Getting all tag bugs route. Should hit service next."
-    );
-  }
-
   postBug(request, response) {
     console.log(
       "Hitting post bug route. Should hit service next."
@@ -96,18 +88,34 @@ class BugRouter {
     console.log(
       "Hitting get bug route. Should hit service next."
     );
+    let id = request.params.id;
+    return this.bugService.getBug(id).then((bug) => {
+      response.send(bug[0]);
+    });
     // get specific bug
   }
   editBug(request, response) {
     console.log(
       "Hitting edit bug route. Should hit service next."
     );
+    let id = request.params.id;
+    let newBug = request.body;
+    return this.bugService
+      .editBug(id, newBug)
+      .then((edited) => {
+        response.send(edited);
+      });
+
     // edit bug
   }
   deleteBug(request, response) {
     console.log(
       "Hitting delete bug route. Should hit service next."
     );
+    let id = request.params.id;
+    return this.bugService.deleteBug(id).then((deleted) => {
+      response.send(deleted);
+    });
     // delete bug
   }
 }
