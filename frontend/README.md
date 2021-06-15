@@ -95,3 +95,9 @@ The purpose of this assignment is to create a fullstack application utilizing re
    3. set local storage
 3. dispatch LoginSuccess(token)
 4. (if error) dispatch LoginFailure(error)
+
+##### Current Problem
+
+- after login, it should redirect me to the bugs page
+- the bugs list should just render one of each (it's currently rendering two of the same item)
+- 

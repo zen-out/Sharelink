@@ -20,9 +20,11 @@ function BugsPage() {
   const user_id = user.id;
 
   useEffect(() => {
-    dispatch(GetBugsThunk("a", user_id));
+    dispatch(GetBugsThunk("", user_id));
   }, []);
   function getBugs() {
+    console.log("filter value", filter);
+    console.log("user id", user_id);
     dispatch(GetBugsThunk(filter, user_id));
   }
   const [filter, setFilter] = useState("");
@@ -77,6 +79,8 @@ function BugsPage() {
 
   return (
     <div>
+      <br />
+      <br />
       <AddBugForm
         formOnSubmit={formOnSubmit}
         problem={problem}
@@ -93,13 +97,20 @@ function BugsPage() {
         onTagChange={onTagChange}
         addTag={addTag}
       />
+      <br />
       <input
         type="text"
         value={filter}
         onChange={filterOnChange}
         placeholder="Search"
       />
-      <button onClick={getBugs}>Find bugs</button>
+      <br />
+      <button
+        className="btn btn-outline-dark waves-effect"
+        onClick={getBugs}
+      >
+        Find bugs
+      </button>
       <BugList bugList={bugList} getBugs={getBugs} />
     </div>
   );

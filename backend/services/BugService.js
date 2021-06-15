@@ -145,6 +145,7 @@ class BugService {
     console.log("Bug", bug.bug);
     console.log("userid", USER_ID);
     let realBug = bug.bug;
+    console.log("Adding this bug into bugs table", realBug);
     let addToBugs = await this.postOneAddToBugs(realBug);
     console.log("Add to bugs", addToBugs[0]);
     let BUG_ID = addToBugs[0];
@@ -153,15 +154,19 @@ class BugService {
       USER_ID
     );
     console.log("Added to users bugs", addToUsersBugs[0]);
-    console.log(realBug.tags);
-
-    for (let i = 0; i < realBug.tags.length; i++) {
-      let addToTags = await this.postThreeAddToBugsTags(
-        realBug.tags[i],
-        BUG_ID
-      );
-      console.log(addToTags[0]);
+    console.log("Tags", realBug.tags);
+    if (realBug.tags === []) {
+      return "done";
+    } else {
+      for (let i = 0; i < realBug.tags.length; i++) {
+        let addToTags = await this.postThreeAddToBugsTags(
+          realBug.tags[i],
+          BUG_ID
+        );
+        console.log(addToTags[0]);
+      }
     }
+
     return "done";
 
     // return this.postOneAddToBugs(bug).then((bugId) => {
@@ -186,54 +191,69 @@ class BugService {
   }
 
   searchQuery(search, userId) {
-    return this.knex
-      .select(
-        "bugs.id",
-        "bugs.problem",
-        "bugs.whatshouldbe",
-        "bugs.whatactuallyis",
-        "bugs.hypothesis",
-        "bugs.plan"
-      )
-      .from("bugs")
-      .join("bugs_tags", "bugs.id", "bugs_tags.bug_id")
-      .join("tags", "bugs_tags.tag_id", "tags.id")
-      .join("users_bugs", "users_bugs.bug_id", "bugs.id")
-      .join("users", "users.id", "users_bugs.user_id")
-      .where("users.id", userId)
-      .andWhere((subcondition) => {
-        subcondition
-          .where("bugs.problem", "ilike", `%${search}%`)
-          .orWhere(
-            "bugs.whatshouldbe",
-            "ilike",
-            `%${search}%`
-          )
-          .orWhere(
-            "bugs.whatactuallyis",
-            "ilike",
-            `%${search}%`
-          )
-          .orWhere(
-            "bugs.hypothesis",
-            "ilike",
-            `%${search}%`
-          )
-          .orWhere("bugs.plan", "ilike", `%${search}%`)
-          .orWhere("tags.name", "ilike", `%${search}%`);
-      })
-      .catch((error) => {
-        throw new Error("error", error);
-      });
+    return (
+      this.knex
+        .select(
+          "bugs.id",
+          "bugs.problem",
+          "bugs.whatshouldbe",
+          "bugs.whatactuallyis",
+          "bugs.hypothesis",
+          "bugs.plan"
+        )
+        .from("bugs")
+        //   .join("bugs_tags", "bugs.id", "bugs_tags.bug_id")
+        //   .join("tags", "bugs_tags.tag_id", "tags.id")
+        .join("users_bugs", "users_bugs.bug_id", "bugs.id")
+        .join("users", "users.id", "users_bugs.user_id")
+        .where("users.id", userId)
+        .andWhere((subcondition) => {
+          subcondition
+            .where("bugs.problem", "ilike", `%${search}%`)
+            .orWhere(
+              "bugs.whatshouldbe",
+              "ilike",
+              `%${search}%`
+            )
+            .orWhere(
+              "bugs.whatactuallyis",
+              "ilike",
+              `%${search}%`
+            )
+            .orWhere(
+              "bugs.hypothesis",
+              "ilike",
+              `%${search}%`
+            )
+            .orWhere("bugs.plan", "ilike", `%${search}%`);
+          // .orWhere("tags.name", "ilike", `%${search}%`);
+        })
+        .catch((error) => {
+          throw new Error("error", error);
+        })
+    );
   }
   getTags(bugId) {
-    return this.knex
-      .select("tags.name")
-      .from("tags")
-      .join("bugs_tags", "bugs_tags.tag_id", "tags.id")
-      .where("bugs_tags.bug_id", bugId)
+    // if there is no parameter... then
+    if (bugId) {
+      return this.knex
+        .select("tags.name")
+        .from("tags")
+        .join("bugs_tags", "bugs_tags.tag_id", "tags.id")
+        .where("bugs_tags.bug_id", bugId)
+        .catch((error) => {
+          throw new Error("error", error);
+        });
+    } else {
+      return {};
+    }
+  }
+  doesItHaveATag(bugId) {
+    return this.knex("bugs_tags")
+      .select("*")
+      .where({ bug_id: bugId })
       .catch((error) => {
-        throw new Error("error", error);
+        console.log("error", error);
       });
   }
   async getSearchedBugs(search, userId) {
@@ -242,10 +262,22 @@ class BugService {
       search,
       userId
     );
+    console.log("Getting serached bugs", searchQuery);
+
     for (let i = 0; i < searchQuery.length; i++) {
-      let tags = await this.getTags(searchQuery[i].id);
-      console.log(tags);
-      searchedArray.push({ ...searchQuery[i], tags: tags });
+      // check if it exists in the bugs_tags
+      let haveATag = await this.doesItHaveATag(
+        searchQuery[i].id
+      );
+      if (haveATag.length > 0) {
+        let tags = await this.getTags(searchQuery[i].id);
+        searchedArray.push({
+          ...searchQuery[i],
+          tags: tags,
+        });
+      } else {
+        searchedArray.push({ ...searchQuery[i] });
+      }
     }
     // make sure each item in the array has a unique id
     const res = [

@@ -1,11 +1,9 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { GetBugsThunk } from "../redux/actions/Bug";
 import BugItem from "./BugItem";
 
 function BugList(props) {
   return (
-    <div>
+    <div className="container">
       <h1>Bug List</h1>
       <table className="table table-striped">
         <thead>

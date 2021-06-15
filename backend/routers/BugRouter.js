@@ -18,8 +18,12 @@ class BugRouter {
       this.postBug.bind(this)
     );
     router.get(
-      "/api/search/:userId/:search",
+      "/api/users/:userId/search/:search",
       this.getSearchedBugs.bind(this)
+    );
+    router.get(
+      "/api/users/:userId/search",
+      this.getEmptySearchBugs.bind(this)
     );
     router.put("/api/bugs/:id", this.editBug.bind(this));
     router.delete(
@@ -29,7 +33,17 @@ class BugRouter {
 
     return router;
   }
-  // api/search/:userId/:search
+  // api/users/:userId/search
+  getEmptySearchBugs(request, response) {
+    let userId = request.params.userId;
+    return this.bugService
+      .getSearchedBugs("", userId)
+
+      .then((bugs) => {
+        response.send(bugs);
+      });
+  }
+  // api/users/:userId/search/:search
   getSearchedBugs(request, response) {
     let search = request.params.search;
     let userId = request.params.userId;
@@ -44,7 +58,6 @@ class BugRouter {
     console.log("Search:", search, " Userid", userId);
     return this.bugService
       .getSearchedBugs(search, userId)
-
       .then((bugs) => {
         response.send(bugs);
       });

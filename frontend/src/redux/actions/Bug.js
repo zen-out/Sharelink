@@ -64,8 +64,21 @@ export function AddBugFailure(error) {
 export function GetBugsThunk(search, userId) {
   return function (dispatch) {
     dispatch(GetBugsRequest(search, userId));
+    if (search === "") {
+      console.log("empty search");
+      return axios
+        .get(`${BUGS_URL}/api/users/${userId}/search`)
+        .then((response) => {
+          dispatch(GetBugsSuccess(response.data));
+        })
+        .catch((error) => {
+          dispatch(GetBugsFailure(error));
+        });
+    }
     return axios
-      .get(`${BUGS_URL}/api/search/${userId}/${search}`)
+      .get(
+        `${BUGS_URL}/api/users/${userId}/search/${search}`
+      )
       .then((response) => {
         console.log(
           "Get bugs thunk, should get all the data back here"
