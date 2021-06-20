@@ -4,6 +4,9 @@ import {
   GET_BUGS_FAILURE,
   ADD_BUG_SUCCESS,
   ADD_BUG_FAILURE,
+  DELETE_BUG_REQUEST,
+  DELETE_BUG_SUCCESS,
+  DELETE_BUG_FAILURE,
 } from "../actions/Bug";
 
 export const bugInitialState = {
@@ -60,6 +63,32 @@ export function bugReducer(
         error: false,
       };
     case ADD_BUG_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+        message: action.payload.error,
+      };
+    case DELETE_BUG_REQUEST:
+      let deleteBugId = action.payload.id;
+      return {
+        ...state,
+        loading: true,
+        error: false,
+        bugs: state.bugs.filter(
+          (bug) => bug.id !== deleteBugId
+        ),
+        // filter statement that removes that bug
+      };
+    case DELETE_BUG_SUCCESS:
+      let deletedBugId = action.payload.id;
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        message: action.payload.data,
+      };
+    case DELETE_BUG_FAILURE:
       return {
         ...state,
         loading: false,

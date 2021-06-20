@@ -1,0 +1,92 @@
+<div class="container">
+
+    <h1>Bug APIs</h1>
+    <center>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Link</th>
+                    <th scope="col">Tested Postman</th>
+                    <th scope="col">Connected to Frontend</th>
+                    <th scope="col">Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each bugRoutesInfo}}
+                    <tr>
+
+                        <th scope="row"><a target="_blank" href="{{link}}">
+                                {{#if get}}
+                                    <button type="button" class="btn btn-sm btn-outline-dark waves-effect">{{type}}: {{purpose}}
+                                    </button></a>
+                {{else}}
+
+                    {{type}}: {{purpose}}
+                    {{/if}}
+                    <small class="form-text text-muted mb-4">
+                        {{template}}
+                    </small></th>
+                        {{#if backendtest}}
+                           <td><strong class="text-success">you're awesome</strong></td>
+                        {{else}}
+                                 <td><strong class="text-danger">TO DO</strong></td>
+                        {{/if}}
+                        {{#if frontendconnect}}
+                            <td> {{frontendconnect}}  </td>
+                        {{else}}
+                            <td><strong class="text-danger">TO DO</strong></td>
+                        {{/if}}
+                        <td>{{notes}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </center>
+
+    <h1>User APIs</h1>
+    <center>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Link</th>
+                    <th scope="col">Tested Postman</th>
+                    <th scope="col">Connected to Frontend</th>
+                    <th scope="col">Notes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each userRoutesInfo}}
+                    <tr>
+
+                        <th scope="row"><a target="_blank" href="{{link}}">
+                                {{#if get}}
+                                    <button type="button" class="btn btn-sm btn-outline-dark waves-effect">{{purpose}}
+                                    </button></a>
+                {{else}}
+
+                    {{purpose}}
+                    {{/if}}
+
+                    <small class="form-text text-muted mb-4">
+                        {{template}}
+                    </small></th>
+                       {{#if backendtest}}
+                             <td><strong class="text-success">you're awesome</strong></td>
+                        {{else}}
+                             <td><strong class="text-danger">TO DO</strong></td>
+                        {{/if}}
+                        {{#if frontendconnect}}
+                            <td> {{frontendconnect}}  </td>
+                        {{else}}
+                             <td><strong class="text-danger">TO DO</strong></td>
+                        {{/if}}
+                        <td>{{notes}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </center>
+</div>
+
+
+

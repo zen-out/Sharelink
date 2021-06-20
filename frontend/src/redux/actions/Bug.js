@@ -8,9 +8,19 @@ export const GET_BUGS_SUCCESS = "GET_BUGS_SUCCESS";
 export const GET_BUGS_FAILURE = "GET_BUGS_FAILURE";
 export const ADD_BUG_SUCCESS = "ADD_BUG_SUCCESS";
 export const ADD_BUG_FAILURE = "ADD_BUG_FAILURE";
+export const DELETE_BUG_REQUEST = "DELETE_BUG_REQUEST";
 export const DELETE_BUG_SUCCESS = "DELETE_BUG_SUCCESS";
 export const DELETE_BUG_FAILURE = "DELETE_BUG_FAILURE";
 
+
+export function DeleteBugRequest(id) {
+  return {
+    type: DELETE_BUG_REQUEST,
+    payload: {
+      id: id,
+    },
+  };
+}
 export function DeleteBugSuccess(data) {
   return {
     type: DELETE_BUG_SUCCESS,
@@ -79,6 +89,8 @@ export function AddBugFailure(error) {
     },
   };
 }
+
+export function EditBugThunk(bugId, newBug) {}
 
 export function DeleteBugThunk(bugId) {
   return function (dispatch) {

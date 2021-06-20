@@ -11,7 +11,7 @@ import {
 import { JWT_SECRET } from "../utilities/config";
 function BugsPage() {
   const bugStore = useSelector((state) => state.bugStore);
-  const bugList = bugStore.bugs;
+  //   const bugList = bugStore.bugs;
   // deconstruct bug store here
   const { bugs, error, loading, message } = bugStore;
   const dispatch = useDispatch();
@@ -21,13 +21,16 @@ function BugsPage() {
   const user_id = user.id;
 
   useEffect(() => {
+    // console.log("iii");
     dispatch(GetBugsThunk("", user_id));
-  }, []);
+    setBugArray(bugs);
+  }, [loading]);
   function getBugs() {
     console.log("filter value", filter);
     console.log("user id", user_id);
     dispatch(GetBugsThunk(filter, user_id));
   }
+  const [bugArray, setBugArray] = useState(bugs);
   const [filter, setFilter] = useState("");
   const [problem, setProblem] = useState("");
   const [whatShouldBe, setWhatShouldBe] = useState("");
@@ -117,7 +120,7 @@ function BugsPage() {
         Find bugs
       </button>
       <BugList
-        bugList={bugList}
+        bugList={bugs}
         getBugs={getBugs}
         deleteBug={deleteBug}
       />
