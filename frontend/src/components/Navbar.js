@@ -12,6 +12,7 @@ import SignupPage from "../pages/SignupPage";
 import HomePage from "../pages/HomePage";
 import NoMatchPage from "../pages/NoMatchPage";
 import BugsPage from "../pages/BugsPage";
+import PomodoroPage from "../pages/PomodoroPage";
 
 function Navbar() {
   return (
@@ -51,6 +52,11 @@ function Navbar() {
               Bugs
             </Link>
           </li>
+          <li className="nav-item">
+            <Link className="nav-link" to="/pomodoro">
+              Pomodoro
+            </Link>
+          </li>
         </ul>
       </nav>
       <Switch>
@@ -70,6 +76,11 @@ function Navbar() {
           exact
           path="/sharelink"
           component={SharelinkPage}
+        />
+        <Route
+          exact
+          path="/pomodoro"
+          component={PomodoroPage}
         />
         <Route exact path="/bugs" component={BugsPage} />
         <Route component={NoMatchPage} />

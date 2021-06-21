@@ -57,6 +57,15 @@ const bugRoutesInfo = [
   },
   {
     link: "/api/bugs/2",
+    type: "PUT",
+    template: "/api/bugs/:id - newBug is request.body",
+    purpose: "edit bug",
+    backendtest: "yes",
+    frontendconnect: "no",
+    notes: "implemented in",
+  },
+  {
+    link: "/api/bugs/2",
     type: "DELETE",
     template: "/api/bugs/:id",
     purpose: "delete bug",

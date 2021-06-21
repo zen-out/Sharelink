@@ -292,12 +292,16 @@ class BugService {
     return res;
   }
   editBug(id, newBug) {
+    let updatedBug = newBug.newBug;
     console.log(
-      "Hit edit bug service. Should be able to edit bug."
+      "Hit edit bug service. Should be able to edit bug. ID",
+      id,
+      "bug",
+      updatedBug
     );
     return this.knex("bugs")
       .where({ id: id })
-      .update(newBug)
+      .update(updatedBug)
       .then(() => {
         return "edited";
       })

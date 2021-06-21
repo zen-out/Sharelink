@@ -11,8 +11,36 @@ export const ADD_BUG_FAILURE = "ADD_BUG_FAILURE";
 export const DELETE_BUG_REQUEST = "DELETE_BUG_REQUEST";
 export const DELETE_BUG_SUCCESS = "DELETE_BUG_SUCCESS";
 export const DELETE_BUG_FAILURE = "DELETE_BUG_FAILURE";
+export const EDIT_BUG_REQUEST = "EDIT_BUG_REQUEST";
+export const EDIT_BUG_SUCCESS = "EDIT_BUG_SUCCESS";
+export const EDIT_BUG_FAILURE = "EDIT_BUG_FAILURE";
 
+export function EditBugRequest(id) {
+  return {
+    type: EDIT_BUG_REQUEST,
+    payload: {
+      id: id,
+    },
+  };
+}
+export function EditBugSuccess(id, newBug) {
+  return {
+    type: EDIT_BUG_SUCCESS,
+    payload: {
+      id: id,
+      newBug: newBug,
+    },
+  };
+}
 
+export function EditBugFailure(error) {
+  return {
+    type: EDIT_BUG_FAILURE,
+    payload: {
+      error: error,
+    },
+  };
+}
 export function DeleteBugRequest(id) {
   return {
     type: DELETE_BUG_REQUEST,
@@ -90,7 +118,23 @@ export function AddBugFailure(error) {
   };
 }
 
-export function EditBugThunk(bugId, newBug) {}
+export function EditBugThunk(bugId, newBug) {
+  return function (dispatch) {
+    dispatch(EditBugRequest(bugId));
+    return axios({
+      method: "put",
+      url: `${BUGS_URL}/api/bugs/${bugId}`,
+      data: { newBug },
+    })
+      .then((edited) => {
+        console.log("was it successful", edited);
+        dispatch(EditBugSuccess(bugId, newBug));
+      })
+      .catch((error) => {
+        dispatch(EditBugFailure(error));
+      });
+  };
+}
 
 export function DeleteBugThunk(bugId) {
   return function (dispatch) {

@@ -4,6 +4,7 @@ import BugList from "../components/BugList";
 import AddBugForm from "../components/AddBugForm";
 import { useSelector, useDispatch } from "react-redux";
 import {
+  EditBugThunk,
   GetBugsThunk,
   AddBugThunk,
   DeleteBugThunk,
@@ -80,9 +81,22 @@ function BugsPage() {
   function filterOnChange(event) {
     setFilter(event.target.value);
   }
+  function editBug(id, newBug) {
+    console.log(
+      "Edit bug function called in parent component"
+    );
+    console.log("id", id);
+    console.log("new bug", newBug);
+  }
   function deleteBug(id) {
     console.log("id", id);
     dispatch(DeleteBugThunk(id));
+  }
+  function editBug(id, newBug) {
+    console.log("Edit bug button clicked on bugs page");
+    console.log("id", id);
+    console.log("new bug", newBug);
+    dispatch(EditBugThunk(id, newBug));
   }
 
   return (
@@ -123,6 +137,7 @@ function BugsPage() {
         bugList={bugs}
         getBugs={getBugs}
         deleteBug={deleteBug}
+        editBug={editBug}
       />
     </div>
   );
